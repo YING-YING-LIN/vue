@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        img{
+            width: 100px;
+            height: 100px;
+            
+        }
+
+        #show_box{
+            font-family: Arial, sans-serif;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div><img src="./img/004.jpg" alt=""></div>
+    <button id="my_btn" type="button">開始擲骰子</button>
+    <div id="show_box"></div>
+
+    <script>
+        let showbox = document.querySelector('#show_box');
+        function resetnumber(){
+            showbox.innerHTML = '';
+        }
+        
+        
+
+
+        let btn = document.querySelector('#my_btn');
+        btn.addEventListener('click' , function(){
+
+
+            resetnumber();
+
+
+            for(let n =1; n<21;n++){
+                let number_1 =Math.floor(Math.random()*6)+1;
+                let number_2 =Math.floor(Math.random()*6)+1;
+                let number_3 =Math.floor(Math.random()*6)+1;
+
+                showbox.innerHTML = showbox.innerHTML + `第 ${n} 次: ${number_1}, ${number_2}, ${number_3}<br>`
+
+                if (number_1 === number_2 && number_2 === number_3) {
+
+                    showbox.innerHTML = showbox.innerHTML +'三顆骰子數字相同，停止擲骰子。<br>';
+                    break;
+                }
+        }
+    })
+    
+
+            
+
+      
+
+        
+    </script>
+    
+</body>
+</html>

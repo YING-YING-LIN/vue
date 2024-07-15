@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        body {
+            background-image: url('./weatherimg/background.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .btn_navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+        .weatherimg {
+            width: 150px;
+            height: 150px;
+
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">台灣各縣市天氣預報<i class="fa-solid fa-cloud"></i></span>
+            <div class="container-fluid btn_navbar">
+                <button type="button" data-area="全部" class="showcity btn btn-outline-secondary ">全部縣市</button>
+                <button type="button" data-area="北部" class="showcity btn btn-outline-secondary ms-3">北部縣市</button>
+                <button type="button" data-area="中部" class="showcity btn btn-outline-secondary ms-3">中部縣市</button>
+                <button type="button" data-area="南部" class="showcity btn btn-outline-secondary ms-3">南部縣市</button>
+                <button type="button" data-area="東部" class="showcity btn btn-outline-secondary ms-3">東部縣市</button>
+                <button type="button" data-area="外島" class="showcity btn btn-outline-secondary ms-3">外島地區</button>
+            </div>
+        </div>
+    </nav>
+    <div class=" mt-3">
+        <div class="row ms-5 m-0" id="weatherlist">
+            <div class="col-md-3">
+                <div class="card mt-3" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">台北市</h5>
+                        <h6 class="card-subtitle mb-2 text-body-secondary "></h6>
+                        <img class="weatherimg ms-5 " src="./weatherimg/rain.svg" alt="">
+                        <p class="card-text text-center mt-3">天氣晴朗陽光燦爛~</p>
+                        <p class="temperature text-center"><i class="fa-solid fa-temperature-low me-2"></i>最高氣溫:</p>
+                        <p class="temperature text-center"><i class="fa-solid fa-temperature-low me-2"></i>最低氣溫:</p>
+                        <p class="rainfall text-center"><i class="fa-solid fa-cloud-rain"><span class="">30%</span></i>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <script>
+        let weatherlist = document.querySelector('#weatherlist');
+        let city = [];
+
+
+        callfetch()
+        function callfetch() {
+            fetch('https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-D6F10CAC-826D-473C-A989-9E95E4422232')
+                .then(function (response) {
+                    return response.json();
+                    //處理response
+                })
+                .then(function (item) {
+
+                    console.log(item); //從這邊看資料來源
+                    let city = item.records.location;
+
+
+                    let cityname = city.filter((city) => allcity.includes(city.locationName)); //過濾
+                    console.log(cityname);
+
+
+                    //卡片區
+                    weatherlist.innerHTML = '';
+                    //顯示已過濾完的資料
+                    cityname.forEach((city) => {
+                        let minTemp = city.weatherElement.filter(el => el.elementName === "MinT").map(el => el.time[0].parameter.parameterName);
+                        let maxTemp = city.weatherElement.filter(el => el.elementName === "MaxT").map(el => el.time[0].parameter.parameterName);
+                        let pop = city.weatherElement.filter(el => el.elementName === "PoP").map(el => el.time[0].parameter.parameterName)[0];
+                        console.log(minTemp, maxTemp, pop)
+
+                        if (minTemp >= 20 && maxTemp <= 40 && pop < 20) {
+                            weatherlist.innerHTML += `<div class="col-md-3">
+                            <div class="card mt-3" style="width: 18rem;">
+                            <div class="card-body">
+                            <h5 class="card-title">${city.locationName}</h5>
+                            <h6 class="card-subtitle mb-2 text-body-secondary "></h6>
+                            <img class="weatherimg ms-5 " src="./weatherimg/sun.SVG" alt=""> 
+                            <p class="card-text text-center mt-3">天氣晴朗陽光燦爛~</p>
+                            <p class="temperature text-center"><i class="fa-solid fa-temperature-low me-2"></i>
+                                最高氣溫:${maxTemp}  最低氣溫:${minTemp}</p>
+                            <p class="rainfall text-center"><i class="fa-solid fa-cloud-rain"><span class="ms-3">${pop}%</span></i>
+                            </p>
+                           </div>
+                          </div>
+                         </div>`;
+
+                        } else if (minTemp >= 20 && maxTemp <= 40 && pop < 30) {
+                            weatherlist.innerHTML += `<div class="col-md-3">
+                            <div class="card mt-3" style="width: 18rem;">
+                            <div class="card-body">
+                            <h5 class="card-title">${city.locationName}</h5>
+                            <h6 class="card-subtitle mb-2 text-body-secondary "></h6>
+                            <img class="weatherimg ms-5 " src="./weatherimg/suncloud.svg" alt="">
+                            <p class="card-text text-center mt-3">天氣晴朗，是出門的好機會</p>
+                            <p class="temperature text-center"><i class="fa-solid fa-temperature-low me-2"></i>
+                                最高氣溫:${maxTemp}  最低氣溫:${minTemp}</p>
+                            <p class="rainfall text-center"><i class="fa-solid fa-cloud-rain"><span class="ms-3">${pop}%</span></i>
+                            </p>
+                           </div>
+                          </div>
+                         </div>`;
+                        } else if (minTemp >= 20 && maxTemp <= 40 && pop < 40) {
+                            weatherlist.innerHTML += `<div class="col-md-3">
+                            <div class="card mt-3" style="width: 18rem;">
+                            <div class="card-body">
+                            <h5 class="card-title">${city.locationName}</h5>
+                            <h6 class="card-subtitle mb-2 text-body-secondary "></h6>
+                            <img class="weatherimg ms-5 " src="./weatherimg/suncloud.svg" alt="">
+                            <p class="card-text text-center mt-3">雲霧較厚，降雨機率增加</p>
+                            <p class="temperature text-center"><i class="fa-solid fa-temperature-low me-2"></i>
+                                最高氣溫:${maxTemp}  最低氣溫:${minTemp}</p>
+                            <p class="rainfall text-center"><i class="fa-solid fa-cloud-rain"><span class="ms-3">${pop}%</span></i>
+                            </p>
+                           </div>
+                          </div>
+                         </div>`;
+                        } else if (minTemp >= 20 && maxTemp <= 40 && pop < 50) {
+                            weatherlist.innerHTML += `<div class="col-md-3">
+                            <div class="card mt-3" style="width: 18rem;">
+                            <div class="card-body">
+                            <h5 class="card-title">${city.locationName}</h5>
+                            <h6 class="card-subtitle mb-2 text-body-secondary "></h6>
+                            <img class="weatherimg ms-5 " src="./weatherimg/rain2.svg" alt="">
+                            <p class="card-text text-center mt-3">降雨機會增加，要記得帶傘喔</p>
+                            <p class="temperature text-center"><i class="fa-solid fa-temperature-low me-2"></i>
+                                最高氣溫:${maxTemp}  最低氣溫:${minTemp}</p>
+                            <p class="rainfall text-center"><i class="fa-solid fa-cloud-rain"><span class="ms-3">${pop}%</span></i>
+                            </p>
+                           </div>
+                          </div>
+                         </div>`;
+                        }
+
+                    });
+
+
+                    btn(city);
+                });
+
+
+        };
+
+
+
+
+
+        console.log(city);
+
+        let allcity = [
+            "臺北市", "新北市", "桃園市", "臺中市", "臺南市", "高雄市", "新竹縣", "苗栗縣", "彰化縣", "南投縣", "雲林縣", "嘉義縣", "屏東縣", "宜蘭縣", "花蓮縣", "臺東縣", "澎湖縣", "金門縣", "連江縣", "基隆市", "新竹市", "嘉義市",
+        ];
+
+        let northcity = [
+            "臺北市", "新北市", "宜蘭縣", "基隆市", "桃園市", "新竹縣", "新竹市",
+        ];
+
+        let midcity = [
+            "苗栗縣", "臺中市", "彰化縣", "南投縣", "雲林縣",
+        ];
+
+
+        let southcity = [
+            "嘉義縣", "嘉義市", "臺南市", "高雄市", "屏東縣",
+        ];
+
+        let eastcity = [
+            "花蓮縣", "臺東縣",
+        ];
+
+
+        let outcity = [
+            "澎湖縣", "金門縣", "連江縣",
+        ];
+
+        function btn(its) {
+        let showcity = document.querySelectorAll('.showcity');
+        showcity.forEach((item) => {
+        item.addEventListener('click', function () {
+            console.log(item.dataset.area);
+
+            if (item.dataset.area == '全部') {
+                console.log(allcity);
+                let cityname = its.filter((city) => allcity.includes(city.locationName)); // 過濾
+                console.log(cityname);
+                displayWeather(cityname);
+            } else if (item.dataset.area == '北部') {
+                console.log(northcity);
+                let cityname = its.filter((city) => northcity.includes(city.locationName));
+                console.log(cityname);
+                displayWeather(cityname);
+            } else if (item.dataset.area == '中部') {
+                console.log(midcity);
+                let cityname = its.filter((city) => midcity.includes(city.locationName));
+                console.log(cityname);
+                displayWeather(cityname);
+            } else if (item.dataset.area == '南部') {
+                console.log(southcity);
+                let cityname = its.filter((city) => southcity.includes(city.locationName));
+                console.log(cityname);
+                displayWeather(cityname);
+            } else if (item.dataset.area == '東部') {
+                console.log(eastcity);
+                let cityname = its.filter((city) => eastcity.includes(city.locationName));
+                console.log(cityname);
+                displayWeather(cityname);
+            } else if (item.dataset.area == '外島') {
+                console.log(outcity);
+                let cityname = its.filter((city) => outcity.includes(city.locationName));
+                console.log(cityname);
+                displayWeather(cityname);
+            }
+        });
+    });
+}
+
+        function createWeatherCard(city, minTemp, maxTemp, pop, imgSrc, description) {
+           return `<div class="col-md-3">
+                  <div class="card mt-3" style="width: 18rem;">
+                  <div class="card-body">
+                  <h5 class="card-title">${city.locationName}</h5>
+                  <h6 class="card-subtitle mb-2 text-body-secondary "></h6>
+                  <img class="weatherimg ms-5 " src="${imgSrc}" alt="">
+                  <p class="card-text text-center mt-3">${description}</p>
+                  <p class="temperature text-center"><i class="fa-solid fa-temperature-low me-2"></i>
+                    最高氣溫:${maxTemp}  最低氣溫:${minTemp}</p>
+                  <p class="rainfall text-center"><i class="fa-solid fa-cloud-rain"><span class="ms-3">${pop}%</span></i>
+                 </p>
+                </div>
+                </div>
+                </div>`;
+             };
+
+        function displayWeather(cityname) {
+            weatherlist.innerHTML = '';
+            cityname.forEach((city) => {
+           let minTemp = city.weatherElement.filter(el => el.elementName === "MinT").map(el => el.time[0].parameter.parameterName);
+           let maxTemp = city.weatherElement.filter(el => el.elementName === "MaxT").map(el => el.time[0].parameter.parameterName);
+           let pop = city.weatherElement.filter(el => el.elementName === "PoP").map(el => el.time[0].parameter.parameterName)[0];
+           let cardHTML = '';
+
+        if (minTemp >= 20 && maxTemp <= 40) {
+            if (pop < 20) {
+                cardHTML = createWeatherCard(city, minTemp, maxTemp, pop, "./weatherimg/sun.SVG", "天氣晴朗陽光燦爛~");
+            } else if (pop < 30) {
+                cardHTML = createWeatherCard(city, minTemp, maxTemp, pop, "./weatherimg/suncloud.svg", "天氣晴朗，是出門的好機會");
+            } else if (pop < 40) {
+                cardHTML = createWeatherCard(city, minTemp, maxTemp, pop, "./weatherimg/suncloud.svg", "雲霧較厚，降雨機率增加");
+            } else if (pop < 50) {
+                cardHTML = createWeatherCard(city, minTemp, maxTemp, pop, "./weatherimg/rain2.svg", "降雨機會增加，要記得帶傘喔");
+            }
+        }
+
+        weatherlist.innerHTML += cardHTML;
+    });
+}
+    </script>
+</body>
+
+</html>

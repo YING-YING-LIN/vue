@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .my_show {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <button id="scissors" type="button"><img src="./img/005.png" alt="">剪刀</button>
+    <button id="rock" type="button"><img src="./img/006.png" alt="">石頭</button>
+    <button id="paper" type="button"><img src="./img/007.png" alt="">布</button>
+
+    <div><span id="output" class="my_show">對決結果:</span></div>
+
+
+
+
+
+    <script>
+
+        //這裡是按下剪刀(只出剪刀會產生的三種可能)的部分
+        let scissors_btn = document.querySelector('#scissors');
+        scissors_btn.addEventListener('click', function () {
+
+            let scissors = 0;  //剪刀
+            let rock = 1;  //石頭
+            let paper = 2;  //布
+
+            let pc = Math.round(Math.random() * 2);
+            
+            if (pc == scissors) {
+                document.querySelector('#output').innerHTML = '電腦出剪刀，你們平手'
+            } else if (pc == 1) {
+                document.querySelector('#output').innerHTML = '電腦出石頭，你輸了'
+            } else if (pc == 2) {
+                document.querySelector('#output').innerHTML = '電腦出布，恭喜，你贏了'
+            }
+        })
+
+
+        //這裡是按下石頭(只出石頭會產生的三種可能)的部分
+        let rock_btn = document.querySelector('#rock');
+        rock_btn.addEventListener('click', function () {
+
+            let scissors = 0;  //剪刀
+            let rock = 1;  //石頭
+            let paper = 2;  //布
+
+            let pc = Math.round(Math.random() * 2);
+
+            if (pc == rock) {
+                document.querySelector('#output').innerHTML = '電腦出石頭，你們平手'
+            } else if (pc == 0) {
+                document.querySelector('#output').innerHTML = '電腦出剪刀，你贏了'
+            } else if (pc == 2) {
+                document.querySelector('#output').innerHTML = '電腦出布，你輸了'
+            }
+        })
+
+
+        //這裡是按下布(只出布會產生的三種可能)的部分
+        let paper_btn = document.querySelector('#paper');
+        paper_btn.addEventListener('click', function () {
+
+            let scissors = 0;  //剪刀
+            let rock = 1;  //石頭
+            let paper = 2;  //布
+
+            let pc = Math.round(Math.random() * 2);
+
+            if (pc == paper) {
+                document.querySelector('#output').innerHTML = '電腦出布，你們平手'
+            } else if (pc == 0) {
+                document.querySelector('#output').innerHTML = '電腦出剪刀，你輸了'
+            } else if (pc == 1) {
+                document.querySelector('#output').innerHTML = '電腦出石頭，你贏了'
+            }
+        })
+
+
+
+
+
+
+
+    </script>
+
+
+</body>
+
+</html>
